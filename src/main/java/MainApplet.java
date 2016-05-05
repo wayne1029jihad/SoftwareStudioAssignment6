@@ -1,5 +1,6 @@
 package main.java;
-
+import java.lang.Object;
+import java.awt.Button;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
@@ -18,12 +19,24 @@ public class MainApplet extends PApplet{
 	private ArrayList<Character> characters;
 	private final static int width = 1200, height = 650;
 	JSONObject data;
+
 	
 	
 	public void setup() {
 
 		size(width, height);
 		characters = new ArrayList<Character>();
+		this.noStroke();
+		this.fill(2, 247, 141);
+		this.rect(1120, 20, "ADD ALL".length()+5, 20);		
+		textSize(26);
+		this.fill(255);
+		this.text("ADD ALL", 1123, 20,1123+"ADD ALL".length(),40);
+		this.fill(2, 247, 141);
+		this.rect(1120, 50, "CLEAR".length()+5, 70);		
+		textSize(26);
+		this.fill(255);
+		this.text("CLEAR", 1123, 50,1123+"CLEAR".length(),70);
 		smooth();
 		loadData();
 		
@@ -50,6 +63,11 @@ public class MainApplet extends PApplet{
 				characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("value")));
 			}
 		}
+	}
+	//¹ê§@addall,clear
+	public void mouseClicked()
+	{
+		
 	}
 
 }
