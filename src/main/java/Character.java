@@ -9,79 +9,132 @@ import java.util.ArrayList;
 public class Character {
 	
 	private MainApplet parent;
-	public float x, y, radius;
-	private String name;	
+	private float iniX, iniY, radius = 15;
+	public float nowX,nowY;
+	private String name,colour;	
 	private ArrayList<Character> targets;
-
-	public Character(MainApplet parent){
-
-		this.parent = parent;
-		
-	}
-
-	public void display(){
-		parent.fill(0);
-		parent.fill(255);
-		parent.rect(x-15, y-15, 70, 20);
-		parent.fill(0);
-		if((x - parent.mouseX)*(x - parent.mouseX)+(y - parent.mouseY)* (y - parent.mouseY) < radius * radius)
-			parent.text(name, x, y);
-	}
-	
-	void mouseMoved() {
-		
-	}
-	public void addTarget(Character target){
-		targets.add(target);		
-	}
-	
-	public ArrayList<Character> getTargets(){
-		return this.targets;
-	}
-	
-}
-
-package main.java;
-
-import java.util.ArrayList;
-
-import processing.core.PApplet;
-
-/**
-* This class is used to store states of the characters in the program.
-* You will need to declare other variables depending on your implementation.
-*/
-public class Character {
-	
-	private MainApplet parent;
-	String name,colour;
-	private ArrayList<Character> targets;
-	private ArrayList<Character> values;
-	int number;
-
-	public Character(MainApplet parent,String name,String colour){
+	private ArrayList<Integer> values;
+	private boolean on = false;//to decide the cursor is on the character circle
+	private boolean locked = false;//to decide the cursor is on the character circle and mouse pressed
+	int number;//decide  initial position
+	public Character(MainApplet parent,String name,String colour, int nunber){
 
 		this.parent = parent;
 		this.name=name;
 		this.colour=colour;
-		targets = new ArrayList<Character>();
-		values = new ArrayList<Character>();
+		
+		targets = new ArrayList<Character>();//record how is connection with this character
+		values = new ArrayList<Integer>();//record value of targets, decide how width the connection line
 	}
 
 	public void display(){
-
+		parent.fill(0);
+		
+		if((iniX - parent.mouseX)*(iniX - parent.mouseX)+(iniY - parent.mouseY)* (iniY - parent.mouseY) < radius * radius)
+		{
+			 on = true;
+			 if(!locked) { 
+				 parent.stroke(255); 
+				 parent.fill(153);
+			    } 
+		}
+		else 
+		{
+			on = false;
+			parent.stroke(153);
+			parent.fill(153);	   
+	    }
+		if(on)
+		{
+			parent.fill(255);
+			parent.rect(iniX-15, iniY-15, 70, 20);
+			parent.fill(0);
+			parent.text(name, iniX, iniY);
+			bigRadius(true);
+		}
+		else
+		{
+			bigRadius(false);
+		}
+		parent.ellipse(iniX, iniY, radius, radius);
 	}
+	
+	void mouseDragged()
+	{
+		if(locked)
+		{
+			nowX = parent.mouseX;
+			nowY = parent.mouseY;
+		}
+	}
+	void mouseReleased()
+	{
+		locked = false;
+	}
+
+	void mousePressed() 
+	{
+	  if(on)
+	  { 
+		  locked = true; 
+		  parent.fill(255, 255, 255);
+	  } 
+	  else 
+	  {
+		  locked = false;
+	  }	
+	}
+	
+	
+	
+	
 	public void addTarget(Character target) {
 		this.targets.add(target);
 	}
-	public void addValue(Character value) {
+	public void addValue(Integer value) {
 		this.values.add(value);
 	}
 	public ArrayList<Character> getTargets(){ return this.targets; }
-	public ArrayList<Character> getValues(){ return this.values; }
+	public ArrayList<Integer> getValues(){ return this.values; }
 	public void setnumber(int n)
 	{
 		number=n;
 	}
+	public float getX()
+	{
+		return nowX;
+	}
+	public float getY()
+	{
+		return nowY;
+	}
+	public void resetPosition()
+	{
+		nowX = iniX;
+		nowY = iniY;
+	}
+	public void setPosition(float X,float Y)
+	{
+		nowX = X;
+		nowY = Y;
+	}
+	public void bigRadius(boolean big)
+	{
+		if(big)
+			radius = 20;
+		else
+			radius = 15;
+	}
+	public boolean getOn()
+	{
+		return on;
+	}
+	public boolean getLocked()
+	{
+		return locked;
+	}
+	
 }
+
+
 
