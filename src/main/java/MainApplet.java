@@ -2,7 +2,7 @@ package main.java;
 import java.lang.Object;
 import java.awt.Button;
 import java.util.ArrayList;
-
+import java.awt.*;
 import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -55,12 +55,12 @@ public class MainApplet extends PApplet{
 			for (int i = 0; i < nodes.size(); i++) {
 				JSONObject node = nodes.getJSONObject(i);
 				characters.add(new Character(this, node.getString("name"), node.getString("colour")));
+				characters.get(i).setnumber(i);
 				}
 			for(int i=0;i<links.size();i++)
 			{
 				JSONObject link = links.getJSONObject(i);
 				characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("target")));
-				characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("value")));
 			}
 		}
 	}
