@@ -22,7 +22,9 @@ public class Character {
 		this.parent = parent;
 		this.name=name;
 		this.colour=colour;
-		
+		this.number=nunber;
+		iniY = (number%10*50)+30;
+		iniX = (number/10*100)+30;
 		targets = new ArrayList<Character>();//record how is connection with this character
 		values = new ArrayList<Integer>();//record value of targets, decide how width the connection line
 	}
@@ -44,6 +46,7 @@ public class Character {
 			parent.stroke(153);
 			parent.fill(153);	   
 	    }
+		parent.ellipse(iniX, iniY, radius, radius);
 		if(on)
 		{
 			parent.fill(255);
@@ -56,7 +59,7 @@ public class Character {
 		{
 			bigRadius(false);
 		}
-		parent.ellipse(iniX, iniY, radius, radius);
+		
 	}
 	
 	void mouseDragged()
@@ -83,10 +86,7 @@ public class Character {
 	  {
 		  locked = false;
 	  }	
-	}
-	
-	
-	
+	}	
 	
 	public void addTarget(Character target) {
 		this.targets.add(target);

@@ -20,9 +20,12 @@ public class Network {
 	int addallSize=50,clearSize=50;
 	int who;
 	boolean in=true;
-	public Network(PApplet parent){
-
+	public Network(PApplet parent){			
 		this.parent = parent;
+	}
+
+	public void display(){
+		//parent.fill(0);		
 		parent.ellipseMode(parent.RADIUS);
 		parent.ellipse(700, 325, 250, 250);
 		parent.fill(255);
@@ -39,12 +42,6 @@ public class Network {
 		parent.textSize(26);
 		parent.fill(255);
 		parent.text("CLEAR", 1123, 50,1123+"CLEAR".length(),70);
-		 
-		
-		
-	}
-
-	public void display(){
 		
 	}
 	public void mouseMoved()
@@ -62,7 +59,7 @@ public class Network {
 			//圓內放開character-->回到原位
 			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
 			{
-				characters.get(i).
+				//characters.get(i).
 			}
 			//圓外放開character-->被踢出圓內+重整character
 			else
@@ -91,7 +88,7 @@ public class Network {
 			{
 				for(int i  = 0; i < characters.size(); i++)
 				{
-					if(characters.get(i).geLocked())//boolean
+					if(characters.get(i).getLocked())//boolean
 						 { 
 								who=i;
 								mousePressed(in,i);
@@ -100,8 +97,8 @@ public class Network {
 				}
 			}
 			else//圓外
-			{
-				for(int i  = 0; i < parent.characters.size(); i++)
+			{/*
+				for(int i  = 0; i < parent.characters ; i++)
 				{
 					if(parent.characters.get(i).getOn())
 						{
@@ -109,7 +106,7 @@ public class Network {
 							mousePressed(!in,i);
 							break;
 						}
-				}
+				}*/
 		
 			}
 		}
