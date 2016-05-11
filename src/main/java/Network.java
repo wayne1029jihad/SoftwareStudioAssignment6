@@ -1,11 +1,7 @@
 package main.java;
 
-import java.awt.Button;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
+
 import processing.core.PApplet;
 
 /**
@@ -15,151 +11,263 @@ import processing.core.PApplet;
 * You will need to declare other variables.
 */
 
-public class Network{
+public class Network {
 	
-	private PApplet parent;
-	public ArrayList<Character> characters;
+	private MainApplet parent;
+	private ArrayList<Character> characters = new ArrayList<Character>();
+	int circleX,circleY;
 	int addallX, addallY;      
 	int clearX, clearY; 
-	int addallSize=50,clearSize=50,incirclesize;
-	int radius=250,centerX=700,centerY=325;
-	int who;
-	boolean in=true;
-	
-	public Network(PApplet parent){
-
+	int circleRadius;
+	int addallSize=50,clearSize=50;
+	int whichCharacter;
+	int circleWeight;//the weight of circle's line
+	boolean clickCharacter=false;
+	boolean onClear = false;
+	boolean onAddAll = false;
+	Character currentCharecter;
+	public Network(MainApplet parent){			
 		this.parent = parent;
-		parent.ellipseMode(parent.RADIUS);
-		parent.ellipse(centerX, centerY, radius, radius);
-		parent.stroke(153);
-		parent.noFill();
-		
-		/*parent.noStroke();
-		parent.fill(2, 247, 141);
-		parent.rect(1120, 20, "ADD ALL".length()*10+5, 20);		
-		parent.textSize(26);
-		parent.fill(255);
-		parent.text("ADD ALL", 1123, 20,1123+"ADD ALL".length(),40);
-		parent.noStroke();
-		parent.fill(2, 247, 141);
-		parent.rect(1120, 50, "CLEAR".length()*10+5, 70);		
-		parent.textSize(26);
-		parent.fill(255);
-		parent.text("CLEAR", 1123, 50,1123+"CLEAR".length(),70);*/
-			
-		
+		whichCharacter = -1;//initial to nobody in circle
+		circleWeight = 1;//initial to thin
+		circleX = 700;//circle center's X
+		circleY = 325;//circle center's Y
+		circleRadius = 245;
+		clearX = 910;
+		clearY = 95;
+		addallX = 910;
+		addallY = 25;
+		System.out.println(characters.size());
 	}
 
 	public void display(){
-		for (int i = 0; i < characters.size(); i++) 
+		parent.fill(70, 70, 121);
+		if(inCircle() == true)
+			circleWeight = 7;
+		else
+			circleWeight = 3;
+		parent.stroke(255);
+		parent.strokeWeight(circleWeight);		
+		parent.ellipseMode(parent.RADIUS);
+		parent.ellipse(circleX, circleY, circleRadius, circleRadius);
+		parent.fill(255);
+		parent.stroke(0);
+		
+		
+		parent.fill(70, 207, 191);
+		if(onAddAll)
+		{
+			parent.strokeWeight(3);
+			parent.stroke(255);
+		}
+		else
+		{
+			parent.strokeWeight(1);
+			parent.stroke(125);
+		}
+		
+		parent.rect(addallX, addallY, 200, 60);		
+		parent.textSize(26);
+		parent.fill(255);		
+		parent.text("ADD ALL", addallX+45, addallY+15, 150, 40);
+		parent.noStroke();
+		parent.fill(70, 207, 191);
+		if(onClear)
+		{
+			parent.strokeWeight(3);
+			parent.stroke(255);
+		}
+		else
+		{
+			parent.strokeWeight(1);
+			parent.stroke(125);
+		}
+		parent.rect(clearX, clearY, 200, 60);
+		parent.strokeWeight(1);
+		parent.textSize(26);
+		parent.fill(255);
+		parent.text("CLEAR", clearX+65, clearY+15 ,150, 40);
+		/*
+		for(Character character : characters)
+		{
+			for(int i = 0; i < character.getTargets().size();i++)
 			{
+				character.getTargets().get(i);
+				
+			}
+		}
+		*/
+		for (int i = 0; i < characters.size(); i++) 
+		{
+			//全部角色的哪個?
 			for(int j=i+1;j<characters.size();j++)
 			{
-				for(int k=0;k<characters.getTargets.size();k++)
+				for(int k=0;k<characters.get(i).getTargets().size();k++)
 				{
-					if(characters.get(i).getTargets.get(k)==characters.get(j))
-				{
-						parent.strokeWeight((characters.get(i).getTargets.get(k).getTargetsvalue()/5)+1);
-						parent.bezier(characters.get(i).getX(), characters.get(i).getY(), 
-						characters.get(i).getX()+10,characters.get(i).getY()+30,
-						characters.get(i).getTargets.get(k).getX(), 
-						characters.get(i).getTargets.get(k).getY(),
-						characters.get(i).getTargets.get(k).getX()+10, 
-						characters.get(i).getTargets.get(k).getY()+30);		
-				}
-				}
-			
+					if(characters.get(i).getTargets().get(k)==characters.get(j))
+					{
+						parent.fill(255);
+							parent.strokeWeight(characters.get(i).getValues().get(k)/5+1);
+							parent.bezier(characters.get(i).getX(), characters.get(i).getY(), 
+							characters.get(i).getX()+10,characters.get(i).getY()+30,
+							characters.get(i).getTargets().get(k).getX(), 
+							characters.get(i).getTargets().get(k).getY(),
+							characters.get(i).getTargets().get(k).getX()+10, 
+							characters.get(i).getTargets().get(k).getY()+30);
+							parent.strokeWeight(1);
+					}
+				}		
 			}
-			
-			}
+				
+		}
+	}	
+	private void setoncircle(Character last)
+	{
+		characters.add(last);
+		last.setinCircle(true);
+		putoncircle();
+	}
+	public void mousePressed()
+	{
+		clickCharacter();
+		if(onClear)
+		{
+			ClearAll();
+		}
+		if(onAddAll)
+		{
+			addAll();
+		}
 	}
 	public void mouseMoved()
 	{
-		parent.strokeWeight(4);
+		if(parent.mouseY - clearY < 60 && parent.mouseX - clearX < 200 && parent.mouseY - clearY > 0 && parent.mouseX - clearX > 0)
+			onClear  = true;
+		else
+			onClear  = false;
+		if(parent.mouseY - addallY < 60 && parent.mouseX - addallX < 200 && parent.mouseY - addallY > 0 && parent.mouseX - addallX > 0)
+			onAddAll = true;
+		else
+			onAddAll = false;
+			
 	}
-	public void putoncircle(ArrayList<Character> a,int size)
+	public void mouseReleased()
 	{
-		incirclesize=characters.size();
-		for(int i=0;i<incirclesize;i++)
-		{
-			float deg=360*i/size;
-			float rad= radians (deg);
-			characters.get(i).setPosition(centerX+radius*cos(rad),centerY+radius*sin(rad));
-		}
-	}
-	public void CLEARALL()
-	{
-		for(int i=0;i<characters.size();i++)
-		{
-			characters.get(i).resetPosition();
-			characters.remove(characters.get(i));
-		}
-	}
-	public void mousePressed(boolean in,int num)
-	{
-		if(in)
-		{
-			//圓內放開character-->回到原位
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
+		if(clickCharacter)//if cursor control one character
+		{			//圓內放開character-->回到原位// release
+			if(inCircle() == true)
 			{
-				putoncircle(characters,characters.size());
+				if(whichCharacter != -1)//mean it already in circle
+					putoncircle();
+				else if(currentCharecter.getinCircle())
+					setoncircle(currentCharecter);				
 			}
 			//圓外放開character-->被踢出圓內+重整character
 			else
 			{
-				//logic?
-				characters.get(num).resetPosition();
-				characters.remove(characters.get(num));
-				putoncircle(characters,characters.size());
+				if(whichCharacter != -1)
+				{
+					characters.get(whichCharacter).resetPosition();					
+					characters.get(whichCharacter).setPosition(characters.get(whichCharacter).getiniX(),characters.get(whichCharacter).getiniY());
+					characters.get(whichCharacter).setinCircle(false);
+					characters.remove(whichCharacter);
+					putoncircle();
+				}
+				else
+					currentCharecter.resetPosition();
 			}
+			
 		}
-		else
-		{
-			//圓內放開character-->被加進character
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
-			{
-				characters.add(parent.characters.get(num));
-				putoncircle(characters,characters.size());
-			}
-			//圓外放開character-->回到原位
-			else
-			{
-				characters.get(num).resetPosition();
-				putoncircle(characters,characters.size());
-			}
-		}
-	}	
+		clickCharacter = false;
+	}
+		
 	public void clickCharacter()
 	{
-		if(parent.mousePressed)//boolean
-		{
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)
-				//圓內
+		System.out.println("click!");
+		if(inCircle() == true)
 			{
 				for(int i  = 0; i < characters.size(); i++)
 				{
 					if(characters.get(i).getLocked())//boolean
-						 { 
-								who=i;
-								mousePressed(in,i);
-								break;
-						 }
+					 { 
+						whichCharacter = i;
+						clickCharacter = true;
+						System.out.println(whichCharacter);
+						System.out.println("catch someone in circle!");
+						break;
+					 }
 				}
 			}
 			else//圓外
-			{
+			{			
 				for(int i  = 0; i < parent.characters.size(); i++)
 				{
-					if(parent.characters.get(i).getOn())
+					if(parent.characters.get(i).getLocked())//boolean
+					 { 
+						if(parent.characters.get(i).getinCircle())
 						{
-							who =  i;
-							mousePressed(!in,i);
-							break;
+							for(int j  = 0; j < characters.size(); j++)
+							{
+								if(characters.get(j).getLocked())//boolean
+								 { 
+									whichCharacter = j;
+									clickCharacter = true;
+									System.out.println(whichCharacter);
+									System.out.println("catch someone in circle!");
+									break;
+								 }
+							}
 						}
-				}
-		
-			}
+						else
+						{
+							whichCharacter = -1;
+							currentCharecter = parent.characters.get(i);
+							clickCharacter = true;
+							System.out.println("catch someone out circle!");
+						}
+						break;
+					 }
+				}					
+			}			
+	}
+	
+	public boolean inCircle()
+	{
+		if((circleX - parent.mouseX)*(circleX - parent.mouseX)+(circleY - parent.mouseY)* (circleY - parent.mouseY) < circleRadius * circleRadius)
+			return true;
+		else
+			return false;
+	}
+	public void ClearAll()
+	{		
+		for(Character character : characters)
+		{
+			character.resetPosition();
+			character.setinCircle(false);
+			character.setPosition(character.getiniX(),character.getiniY());
+		}
+		characters.clear();
+		System.out.println(characters.size());
+	}
+	public void addAll()
+	{
+		for(Character character : parent.characters)
+		{
+			if(!character.getinCircle())
+				setoncircle(character);
 		}
 	}
-
+	
+	public void putoncircle()
+	{
+		System.out.println("put on "+characters.size());
+		for(int i = 0; i < characters.size(); i++)
+		{
+			float deg=360*i/characters.size();
+			float rad= parent.radians(deg);
+			System.out.println(circleX+circleRadius*parent.cos(rad)+" "+circleY+circleRadius*parent.sin(rad));
+			characters.get(i).setPosition(circleX+circleRadius*parent.cos(rad),circleY+circleRadius*parent.sin(rad));
+			
+		}
+	}
 }
