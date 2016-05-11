@@ -25,6 +25,8 @@ public class Character {
 		this.number=nunber;
 		iniY = (number%10*50)+30;
 		iniX = (number/10*100)+30;
+		nowY =iniY;
+		nowX = iniX;
 		targets = new ArrayList<Character>();//record how is connection with this character
 		values = new ArrayList<Integer>();//record value of targets, decide how width the connection line
 	}
@@ -35,10 +37,10 @@ public class Character {
 		if((iniX - parent.mouseX)*(iniX - parent.mouseX)+(iniY - parent.mouseY)* (iniY - parent.mouseY) < radius * radius)
 		{
 			 on = true;
-			 if(!locked) { 
-				 parent.stroke(255); 
-				 parent.fill(153);
-			    } 
+		 if(!locked) { 
+			 parent.stroke(255); 
+			 parent.fill(153);
+		    } 
 		}
 		else 
 		{
@@ -46,12 +48,13 @@ public class Character {
 			parent.stroke(153);
 			parent.fill(153);	   
 	    }
-		parent.ellipse(iniX, iniY, radius, radius);
+		parent.ellipse(nowX, nowY, radius, radius);
 		if(on)
 		{
 			parent.fill(255);
 			parent.rect(iniX-15, iniY-15, 70, 20);
 			parent.fill(0);
+			parent.textSize(15);
 			parent.text(name, iniX, iniY);
 			bigRadius(true);
 		}
@@ -62,25 +65,34 @@ public class Character {
 		
 	}
 	
-	void mouseDragged()
+	public void mouseDragged()
 	{
 		if(locked)
 		{
 			nowX = parent.mouseX;
 			nowY = parent.mouseY;
 		}
+		else
+		{
+			nowX = iniX;
+			nowY = iniY;
+		}
 	}
-	void mouseReleased()
+	public void mouseReleased()
 	{
 		locked = false;
+		nowX = iniX;
+		nowY = iniY;
 	}
 
-	void mousePressed() 
+	public void mousePressed() 
 	{
+		
 	  if(on)
 	  { 
 		  locked = true; 
 		  parent.fill(255, 255, 255);
+		  System.out.println("Lock");
 	  } 
 	  else 
 	  {
@@ -135,6 +147,4 @@ public class Character {
 	}
 	
 }
-
-
 

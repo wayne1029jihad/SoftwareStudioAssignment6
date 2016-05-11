@@ -19,7 +19,7 @@ public class MainApplet extends PApplet{
 	 
 	private ArrayList<Character> characters;
 	private Network network = new Network(this);
-	private final static int width = 1200, height = 650;
+	private final static int width = 1200, height = 600;
 	JSONObject data;
 	
 	public void setup() {
@@ -51,6 +51,8 @@ public class MainApplet extends PApplet{
 		text("Star Wars "+ep, 600, 20,600+"ADD ALL".length(),40);
 	}
 
+	
+
 	private void loadData(){
 			
 			file = "starwars-episode-"+ep+"-interactions.json";
@@ -66,6 +68,22 @@ public class MainApplet extends PApplet{
 				JSONObject link = links.getJSONObject(i);
 				characters.get(link.getInt("source")).addTarget(characters.get(link.getInt("target")));
 			}
+	}
+	
+	public void mouseDragged()
+	{
+		for(Character character : characters)
+			character.mouseDragged();
+	}
+	public void mouseReleased()
+	{
+		for(Character character : characters)
+			character.mouseReleased();
+	}
+	public void mousePressed() 
+	{
+		for(Character character : characters)
+			character.mousePressed();
 	}
 	public void keyPressed(){
 		if(key >= '1' && key <= '7')
