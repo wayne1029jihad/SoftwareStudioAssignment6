@@ -13,102 +13,126 @@ import processing.core.PApplet;
 
 public class Network {
 	
-	private PApplet parent;
+	private MainApplet parent;
 	private ArrayList<Character> characters;
+	int circleX,circleY;
 	int addallX, addallY;      
 	int clearX, clearY; 
+	int circleRadius;
 	int addallSize=50,clearSize=50;
-	int who;
-	boolean in=true;
-	public Network(PApplet parent){			
+	int whichCharacter;
+	int circleWeight;//the weight of circle's line
+	boolean clickCharacter=false;
+	Character currentCharecter;
+	public Network(MainApplet parent){			
 		this.parent = parent;
+		whichCharacter = -1;//initial to nobody in circle
+		circleWeight = 1;//initial to thin
+		circleX = 700;//circle center's X
+		circleY = 325;//circle center's Y
+		circleRadius = 245;
 	}
 
 	public void display(){
-		//parent.fill(0);		
+		parent.fill(70, 70, 121);
+		if(inCircle() == true)
+			circleWeight = 7;
+		else
+			circleWeight = 3;
+		parent.strokeWeight(circleWeight);		
 		parent.ellipseMode(parent.RADIUS);
-		parent.ellipse(700, 325, 250, 250);
+		parent.ellipse(circleX, circleY, circleRadius, circleRadius);
 		parent.fill(255);
-		
+		parent.stroke(0);
+		parent.strokeWeight(1);
 		parent.noStroke();
-		parent.fill(2, 247, 141);
-		parent.rect(1120, 20, "ADD ALL".length()+5, 20);		
+		parent.fill(70, 207, 191);
+		parent.rect(910, 25, 200, 60);		
 		parent.textSize(26);
 		parent.fill(255);
-		parent.text("ADD ALL", 1123, 20,1123+"ADD ALL".length(),40);
+		parent.text("ADD ALL", 955, 40, 150, 40);
 		parent.noStroke();
-		parent.fill(2, 247, 141);
-		parent.rect(1120, 50, "CLEAR".length()+5, 70);		
+		parent.fill(70, 207, 191);
+		parent.rect(910, 95, 200, 60);		
 		parent.textSize(26);
 		parent.fill(255);
-		parent.text("CLEAR", 1123, 50,1123+"CLEAR".length(),70);
+		parent.text("CLEAR", 975, 110 ,150, 40);
 		
 	}
 	public void mouseMoved()
 	{
-		parent.strokeWeight(4);
+		
 	}
-	private void putoncircle(Character a)
+	private void putoncircle(Character last)
 	{
-		characters.add(a);
+		characters.add(last);
 	}
-	public void mousePressed(boolean in,int num)
+	
+	public void mouseReleased()
 	{
-		if(in)
-		{
-			//圓內放開character-->回到原位
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
+		if(clickCharacter)//if cursor control one character
+			//圓內放開character-->回到原位// release
+			if(inCircle() == true)
 			{
-				//characters.get(i).
+				if(whichCharacter != -1)//mean it already in circle
+					characters.get(whichCharacter).setPosition(1, 2);
+				else
+					putoncircle(currentCharecter);
 			}
 			//圓外放開character-->被踢出圓內+重整character
 			else
 			{
-				
+				if(whichCharacter != -1)
+				{
+					characters.get(whichCharacter).resetPosition();
+					characters.remove(whichCharacter);
+				}
+				else
+					currentCharecter.resetPosition();
 			}
-		}
-		else
-		{
-			//圓內放開character-->被加進character
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
-			{
-			}
-			//圓外放開character-->回到原位
-			else
-			{
-				
-			}
-		}
-	}	
+	}
+		
 	public void clickCharacter()
 	{
 		if(parent.mousePressed)//boolean
 		{
-			if((parent.mouseX-700)*(parent.mouseX-700)+( parent.mouseY -325)*( parent.mouseY -325)<=250*250)//圓內
+			if(inCircle() == true)
 			{
 				for(int i  = 0; i < characters.size(); i++)
 				{
 					if(characters.get(i).getLocked())//boolean
 						 { 
-								who=i;
-								mousePressed(in,i);
-								break;
+							whichCharacter = i;
+							clickCharacter = true;
+							break;
 						 }
 				}
 			}
 			else//圓外
-			{/*
-				for(int i  = 0; i < parent.characters ; i++)
+			{
+				if(inCircle() == true)
 				{
-					if(parent.characters.get(i).getOn())
-						{
-							who =  i;
-							mousePressed(!in,i);
-							break;
-						}
-				}*/
-		
-			}
+					for(int i  = 0; i < parent.characters.size(); i++)
+					{
+						if(parent.characters.get(i).getLocked())//boolean
+							 { 
+								whichCharacter = -1;
+								currentCharecter = parent.characters.get(i);
+								clickCharacter = true;
+								break;
+							 }
+					}
+				}
+					
+			}			
 		}
 	}
+	public boolean inCircle()
+	{
+		if((circleX - parent.mouseX)*(circleX - parent.mouseX)+(circleY - parent.mouseY)* (circleY - parent.mouseY) < circleRadius * circleRadius)
+			return true;
+		else
+			return false;
+	}
+	
 }

@@ -13,11 +13,11 @@ import processing.data.JSONObject;
 */
 @SuppressWarnings("serial")
 public class MainApplet extends PApplet{
-	int ep = 1;
+	public int ep = 1;
 	private String path = "main/resources/";
 	private String file = "starwars-episode-"+ep+"-interactions.json";
 	 
-	private ArrayList<Character> characters;
+	public ArrayList<Character> characters;
 	private Network network = new Network(this);
 	private final static int width = 1200, height = 600;
 	JSONObject data;
@@ -41,11 +41,10 @@ public class MainApplet extends PApplet{
 	}
 
 	public void draw() {
-		background(220);
-		
-		for(Character character : characters)
-			character.display();
+		background(70, 70, 121);
 		network.display();
+		for(Character character : characters)
+			character.display();		
 		fill(0);
 		textSize(30);
 		text("Star Wars "+ep, 600, 20,600+"ADD ALL".length(),40);
@@ -60,7 +59,7 @@ public class MainApplet extends PApplet{
 			JSONArray nodes=data.getJSONArray("nodes"), links=data.getJSONArray("links");
 			for (int i = 0; i < nodes.size(); i++) {
 				JSONObject node = nodes.getJSONObject(i);
-				characters.add(new Character(this, node.getString("name"), node.getString("colour"), i));
+				characters.add(new Character(this,network,node.getString("name"), node.getString("colour"), i));
 				characters.get(i).setnumber(i);
 				}
 			for(int i=0;i<links.size();i++)

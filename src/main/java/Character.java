@@ -10,19 +10,23 @@ public class Character {
 	
 	private MainApplet parent;
 	private float iniX, iniY, radius = 15;
+	private float setX, setY;
 	public float nowX,nowY;
 	private String name,colour;	
 	private ArrayList<Character> targets;
 	private ArrayList<Integer> values;
+	private Network network;
+	int color;
 	private boolean on = false;//to decide the cursor is on the character circle
 	private boolean locked = false;//to decide the cursor is on the character circle and mouse pressed
 	int number;//decide  initial position
-	public Character(MainApplet parent,String name,String colour, int nunber){
-
+	public Character(MainApplet parent,Network network,String name,String colour, int nunber){
+		this.network = network;
 		this.parent = parent;
 		this.name=name;
 		this.colour=colour;
 		this.number=nunber;
+		color = this.parent.unhex(this.colour.substring(1));
 		iniY = (number%10*50)+30;
 		iniX = (number/10*100)+30;
 		nowY =iniY;
@@ -34,13 +38,13 @@ public class Character {
 	public void display(){
 		parent.fill(0);
 		
-		if((iniX - parent.mouseX)*(iniX - parent.mouseX)+(iniY - parent.mouseY)* (iniY - parent.mouseY) < radius * radius)
+		if((nowX - parent.mouseX)*(nowX - parent.mouseX)+(nowY - parent.mouseY)* (nowY - parent.mouseY) < radius * radius)
 		{
-			 on = true;
-		 if(!locked) { 
-			 parent.stroke(255); 
-			 parent.fill(153);
-		    } 
+				 on = true;
+			 if(!locked) { 
+				 parent.stroke(255); 
+				 parent.fill(153);
+			    } 
 		}
 		else 
 		{
@@ -48,14 +52,15 @@ public class Character {
 			parent.stroke(153);
 			parent.fill(153);	   
 	    }
+		parent.fill(color);
 		parent.ellipse(nowX, nowY, radius, radius);
 		if(on)
 		{
 			parent.fill(255);
-			parent.rect(iniX-15, iniY-15, 70, 20);
+			parent.rect(nowX-15, nowY-15, 100, 20);
 			parent.fill(0);
 			parent.textSize(15);
-			parent.text(name, iniX, iniY);
+			parent.text(name, nowX, nowY);
 			bigRadius(true);
 		}
 		else
@@ -81,8 +86,13 @@ public class Character {
 	public void mouseReleased()
 	{
 		locked = false;
-		nowX = iniX;
-		nowY = iniY;
+		if(network.inCircle())
+		{
+			nowX = setX;
+			nowY = setY;
+		}
+		else
+			resetPosition();
 	}
 
 	public void mousePressed() 
@@ -127,8 +137,8 @@ public class Character {
 	}
 	public void setPosition(float X,float Y)
 	{
-		nowX = X;
-		nowY = Y;
+		setX = X;
+		setY = Y;
 	}
 	public void bigRadius(boolean big)
 	{
@@ -147,4 +157,6 @@ public class Character {
 	}
 	
 }
+
+
 
