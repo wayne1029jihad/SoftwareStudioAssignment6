@@ -13,10 +13,11 @@ public class Character {
 	public float nowX,nowY;
 	private String name,colour;	
 	private ArrayList<Character> targets;
-	private ArrayList<Integer> values;
+	//private ArrayList<Integer> values;
 	private boolean on = false;//to decide the cursor is on the character circle
 	private boolean locked = false;//to decide the cursor is on the character circle and mouse pressed
 	int number;//decide  initial position
+	int value;
 	public Character(MainApplet parent,String name,String colour, int nunber){
 
 		this.parent = parent;
@@ -24,7 +25,7 @@ public class Character {
 		this.colour=colour;
 		
 		targets = new ArrayList<Character>();//record how is connection with this character
-		values = new ArrayList<Integer>();//record value of targets, decide how width the connection line
+		//values = new ArrayList<Integer>();//record value of targets, decide how width the connection line
 	}
 
 	public void display(){
@@ -91,11 +92,19 @@ public class Character {
 	public void addTarget(Character target) {
 		this.targets.add(target);
 	}
-	public void addValue(Integer value) {
+	/*public void addValue(Integer value) {
 		this.values.add(value);
-	}
+	}*/
 	public ArrayList<Character> getTargets(){ return this.targets; }
-	public ArrayList<Integer> getValues(){ return this.values; }
+	//public ArrayList<Integer> getValues(){ return this.values; }
+	public void setTargetsvalue(int value)
+	{
+		this.value=value;
+		}
+	public int getTargetsvalue()
+	{
+		return value;
+	}
 	public void setnumber(int n)
 	{
 		number=n;
